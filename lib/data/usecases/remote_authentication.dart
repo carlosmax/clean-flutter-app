@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 
 import '../http/index.dart';
+import '../../domain/entities/index.dart';
 import '../../domain/helpers/index.dart';
 import '../../domain/usecases/index.dart';
 
@@ -10,13 +11,19 @@ class RemoteAuthentication {
 
   RemoteAuthentication({@required this.httpClient, @required this.url});
 
-  Future<void> auth(AuthenticationParams params) async {
+  Future<Account> auth(AuthenticationParams params) async {
     final body = RemoteAuthenticationParams.fromDomain(params).toJson();
 
     try {
-      this.httpClient.request(url: this.url, method: 'post', body: body);
-    } on HttpError {
-      throw DomainError.unexpected;
+      final httpResponse = await this
+          .httpClient
+          .request(url: this.url, method: 'post', body: body);
+
+      return Account.fromJson(httpResponse);
+    } on HttpError catch (error) {
+      throw error == HttpError.unauthorized
+          ? DomainError.invalidCredentials
+          : DomainError.unexpected;
     }
   }
 }
