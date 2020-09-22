@@ -13,6 +13,15 @@ void main() {
   ClientSpy client;
   String url;
 
+  PostExpectation mockRequest() => when(
+      client.post(any, body: anyNamed('body'), headers: anyNamed('headers')));
+
+  void mockResponse(int statusCode,
+          {String body = '{"any_key":"any_value"}'}) =>
+      mockRequest().thenAnswer((_) async => Response(body, statusCode));
+
+  void mockError() => mockRequest().thenThrow(Exception());
+
   setUp(() {
     client = ClientSpy();
     url = faker.internet.httpUrl();
@@ -28,13 +37,6 @@ void main() {
   });
 
   group('post', () {
-    PostExpectation mockRequest() => when(
-        client.post(any, body: anyNamed('body'), headers: anyNamed('headers')));
-
-    void mockResponse(int statusCode,
-            {String body = '{"any_key":"any_value"}'}) =>
-        mockRequest().thenAnswer((_) async => Response(body, statusCode));
-
     setUp(() {
       mockResponse(200);
     });
@@ -132,6 +134,14 @@ void main() {
 
     test('Should return ServerError if post returns 500', () async {
       mockResponse(500);
+
+      final future = sut.request(url: url, method: 'post');
+
+      expect(future, throwsA(HttpError.serverError));
+    });
+
+    test('Should return ServerError if post throws', () async {
+      mockError();
 
       final future = sut.request(url: url, method: 'post');
 

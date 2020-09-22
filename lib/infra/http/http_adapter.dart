@@ -22,8 +22,12 @@ class HttpAdapter implements HttpClient {
     };
     final jsonBody = body != null ? jsonEncode(body) : null;
 
-    if (method == 'post') {
-      response = await this.client.post(url, headers: headers, body: jsonBody);
+    try {
+      if (method == 'post') {
+        response = await this.client.post(url, headers: headers, body: jsonBody);
+      }
+    } catch(error) {
+      throw HttpError.serverError;
     }
 
     return _handleResponse(response);
