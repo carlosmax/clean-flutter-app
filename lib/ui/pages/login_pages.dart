@@ -18,6 +18,7 @@ class LoginPage extends StatelessWidget {
                 child: Column(
                   children: <Widget>[
                     TextFormField(
+                      key: Key('txtEmail'),
                       decoration: InputDecoration(
                         labelText: 'Email',
                         icon: Icon(Icons.email,
@@ -28,6 +29,7 @@ class LoginPage extends StatelessWidget {
                     Padding(
                       padding: EdgeInsets.only(top: 8, bottom: 32),
                       child: TextFormField(
+                        key: Key('txtPassword'),
                         decoration: InputDecoration(
                           labelText: 'Senha',
                           icon: Icon(Icons.lock,
@@ -37,7 +39,7 @@ class LoginPage extends StatelessWidget {
                       ),
                     ),
                     RaisedButton(
-                      onPressed: () {},
+                      onPressed: null,
                       child: Text('Entrar'.toUpperCase()),
                     ),
                     FlatButton.icon(
