@@ -73,4 +73,30 @@ void main() {
 
     expect(emailTextField.decoration.errorText, errorMsg);
   });
+
+  testWidgets('Should present no error if email is valid',
+      (WidgetTester tester) async {
+    await loadPage(tester);
+
+    emailErrorController.add(null);
+    await tester.pump();
+
+    final emailTextField =
+        FinderHelper.findDescendantWidget<TextField>('txtEmail');
+
+    expect(emailTextField.decoration.errorText, null);
+  });
+
+  testWidgets('Should present no error if email is valid',
+      (WidgetTester tester) async {
+    await loadPage(tester);
+
+    emailErrorController.add('');
+    await tester.pump();
+
+    final emailTextField =
+        FinderHelper.findDescendantWidget<TextField>('txtEmail');
+
+    expect(emailTextField.decoration.errorText, null);
+  });
 }
