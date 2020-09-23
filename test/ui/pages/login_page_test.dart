@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:math';
 
 import 'package:faker/faker.dart';
 import 'package:flutter/material.dart';
@@ -15,13 +14,18 @@ class LoginPresenterSpy extends Mock implements LoginPresenter {}
 void main() {
   LoginPresenter presenter;
   StreamController<String> emailErrorController;
+  StreamController<String> passwordErrorController;
 
   Future<void> loadPage(WidgetTester tester) async {
     presenter = LoginPresenterSpy();
     emailErrorController = StreamController<String>();
+    passwordErrorController = StreamController<String>();
 
     when(presenter.emailErrorStream)
         .thenAnswer((_) => emailErrorController.stream);
+
+    when(presenter.passwordErrorStream)
+        .thenAnswer((_) => passwordErrorController.stream);
 
     final loginPage = MaterialApp(home: LoginPage(presenter));
     await tester.pumpWidget(loginPage);
@@ -98,5 +102,46 @@ void main() {
         FinderHelper.findDescendantWidget<TextField>('txtEmail');
 
     expect(emailTextField.decoration.errorText, null);
+  });
+
+  testWidgets('Should present an error if password is invalid',
+      (WidgetTester tester) async {
+    final errorMsg = 'any error';
+
+    await loadPage(tester);
+
+    passwordErrorController.add(errorMsg);
+    await tester.pump();
+
+    final passwordTextField =
+        FinderHelper.findDescendantWidget<TextField>('txtPassword');
+
+    expect(passwordTextField.decoration.errorText, errorMsg);
+  });
+
+  testWidgets('Should present no error if password is valid',
+      (WidgetTester tester) async {
+    await loadPage(tester);
+
+    passwordErrorController.add(null);
+    await tester.pump();
+
+    final passwordTextField =
+        FinderHelper.findDescendantWidget<TextField>('txtPassword');
+
+    expect(passwordTextField.decoration.errorText, null);
+  });
+
+  testWidgets('Should present no error if password is valid',
+      (WidgetTester tester) async {
+    await loadPage(tester);
+
+    passwordErrorController.add('');
+    await tester.pump();
+
+    final passwordTextField =
+        FinderHelper.findDescendantWidget<TextField>('txtPassword');
+
+    expect(passwordTextField.decoration.errorText, null);
   });
 }
