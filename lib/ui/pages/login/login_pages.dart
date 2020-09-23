@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../../components/components.dart';
 import 'email_input.dart';
 import 'login_presenter.dart';
+import 'password_input.dart';
 
 class LoginPage extends StatefulWidget {
   final LoginPresenter presenter;
@@ -54,26 +55,7 @@ class _LoginPageState extends State<LoginPage> {
                           EmailInput(),
                           Padding(
                             padding: EdgeInsets.only(top: 8, bottom: 32),
-                            child: StreamBuilder<String>(
-                                stream: widget.presenter.passwordErrorStream,
-                                builder: (context, snapshot) {
-                                  return TextFormField(
-                                    key: Key('txtPassword'),
-                                    decoration: InputDecoration(
-                                      labelText: 'Senha',
-                                      icon: Icon(Icons.lock,
-                                          color: Theme.of(context)
-                                              .primaryColorLight),
-                                      errorText:
-                                          snapshot.data?.isNotEmpty == true
-                                              ? snapshot.data
-                                              : null,
-                                    ),
-                                    obscureText: true,
-                                    onChanged:
-                                        widget.presenter.validatePassword,
-                                  );
-                                }),
+                            child: PasswordInput(),
                           ),
                           StreamBuilder<bool>(
                               stream: widget.presenter.isFormValidStream,
