@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:equatable/equatable.dart';
 
 import '../entities/account.dart';
 
@@ -6,9 +7,12 @@ abstract class Authentication {
   Future<Account> auth(AuthenticationParams params);
 }
 
-class AuthenticationParams {
+class AuthenticationParams extends Equatable {
   final String email;
   final String secret;
 
   AuthenticationParams({@required this.email, @required this.secret});
+
+  @override
+  List<Object> get props => [email, secret];
 }
