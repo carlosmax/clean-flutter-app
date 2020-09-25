@@ -5,6 +5,7 @@ import '../protocols/protocols.dart';
 
 class LoginState {
   String emailError;
+  String passwordError;
   bool isFormValid = false;
 }
 
@@ -16,6 +17,9 @@ class StreamLoginPresenter {
   Stream<String> get emailErrorStream =>
       _controller.stream.map((state) => state.emailError).distinct();
 
+  Stream<String> get passwordErrorStream =>
+      _controller.stream.map((state) => state.passwordError).distinct();
+
   Stream<bool> get isFormValidStream =>
       _controller.stream.map((state) => state.isFormValid).distinct();
 
@@ -25,12 +29,16 @@ class StreamLoginPresenter {
     _controller.close();
   }
 
+  void update() => _controller.add(_state);
+
   void validateEmail(String email) {
     _state.emailError = this.validation.validate(field: 'email', value: email);
-    _controller.add(_state);
+    update();
   }
 
   void validatePassword(String password) {
-    this.validation.validate(field: 'password', value: password);
+    _state.passwordError =
+        this.validation.validate(field: 'password', value: password);
+    update();
   }
 }
