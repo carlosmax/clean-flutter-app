@@ -4,9 +4,15 @@ import 'package:flutter/foundation.dart';
 import '../protocols/protocols.dart';
 
 class LoginState {
+  String email;
+  String password;
   String emailError;
   String passwordError;
-  bool isFormValid = false;
+  bool get isFormValid =>
+      emailError == null &&
+      passwordError == null &&
+      email != null &&
+      password != null;
 }
 
 class StreamLoginPresenter {
@@ -32,11 +38,13 @@ class StreamLoginPresenter {
   void update() => _controller.add(_state);
 
   void validateEmail(String email) {
+    _state.email = email;
     _state.emailError = this.validation.validate(field: 'email', value: email);
     update();
   }
 
   void validatePassword(String password) {
+    _state.password = password;
     _state.passwordError =
         this.validation.validate(field: 'password', value: password);
     update();
