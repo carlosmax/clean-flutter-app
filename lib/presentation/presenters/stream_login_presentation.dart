@@ -1,9 +1,9 @@
 import 'dart:async';
-import 'package:ForDev/domain/helpers/index.dart';
 import 'package:flutter/foundation.dart';
 
 import '../protocols/protocols.dart';
 import '../../domain/usecases/index.dart';
+import '../../domain/helpers/index.dart';
 
 class LoginState {
   String email;

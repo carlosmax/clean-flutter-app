@@ -1,12 +1,12 @@
-import 'package:ForDev/domain/entities/index.dart';
-import 'package:ForDev/domain/helpers/index.dart';
-import 'package:ForDev/domain/usecases/index.dart';
 import 'package:test/test.dart';
 import 'package:faker/faker.dart';
 import 'package:mockito/mockito.dart';
 
 import 'package:ForDev/presentation/presenters/stream_login_presentation.dart';
 import 'package:ForDev/presentation/protocols/protocols.dart';
+import 'package:ForDev/domain/entities/index.dart';
+import 'package:ForDev/domain/helpers/index.dart';
+import 'package:ForDev/domain/usecases/index.dart';
 
 class ValidationSpy extends Mock implements Validation {}
 
@@ -142,6 +142,18 @@ void main() {
 
     expectLater(sut.isLoadingStream, emits(false));
     sut.mainErrorStream.listen(expectAsync1((error) => expect(error, DomainError.invalidCredentials.description)));
+    
+    await sut.auth();
+  });
+
+  test('Should emit correct events on UnexpectedError', () async {
+    mockAuthenticationError(DomainError.unexpected);
+
+    sut.validateEmail(email);
+    sut.validatePassword(password);
+
+    expectLater(sut.isLoadingStream, emits(false));
+    sut.mainErrorStream.listen(expectAsync1((error) => expect(error, DomainError.unexpected.description)));
     
     await sut.auth();
   });
