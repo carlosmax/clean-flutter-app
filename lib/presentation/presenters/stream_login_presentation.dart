@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:ForDev/ui/pages/login/login_presenter.dart';
 import 'package:flutter/foundation.dart';
 
 import '../protocols/protocols.dart';
@@ -20,7 +21,7 @@ class LoginState {
       password != null;
 }
 
-class StreamLoginPresenter {
+class StreamLoginPresenter implements LoginPresenter {
   final _state = LoginState();
   final Validation validation;
   final Authentication authentication;
