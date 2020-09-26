@@ -1,3 +1,4 @@
+import 'package:ForDev/main/builders/builders.dart';
 import 'package:http/http.dart';
 import 'package:flutter/material.dart';
 
@@ -28,8 +29,7 @@ Widget makeLoginPage() {
 
 List<FieldValidation> makeLoginValidations() {
   return [
-    RequiredFieldValidation('email'),
-    EmailValidation('email'),
-    RequiredFieldValidation('password'),
+    ...ValidationBuilder.field('email').required().email().build(),
+    ...ValidationBuilder.field('password').required().build(),
   ];
 }
