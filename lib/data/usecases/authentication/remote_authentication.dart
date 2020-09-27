@@ -1,11 +1,11 @@
 import 'package:flutter/foundation.dart';
 
-import '../http/index.dart';
-import '../models/index.dart';
+import '../../http/index.dart';
+import '../../models/index.dart';
 
-import '../../domain/entities/index.dart';
-import '../../domain/helpers/index.dart';
-import '../../domain/usecases/index.dart';
+import '../../../domain/entities/index.dart';
+import '../../../domain/helpers/index.dart';
+import '../../../domain/usecases/index.dart';
 
 class RemoteAuthentication implements Authentication {
   final HttpClient httpClient;

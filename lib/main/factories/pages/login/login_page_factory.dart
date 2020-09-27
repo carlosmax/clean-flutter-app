@@ -1,7 +1,7 @@
 import 'package:http/http.dart';
 import 'package:flutter/material.dart';
 
-import 'package:ForDev/data/usecases/remote_authentication.dart';
+import 'package:ForDev/data/usecases/authentication/remote_authentication.dart';
 import 'package:ForDev/infra/http/index.dart';
 import 'package:ForDev/main/factories/http/api_url_factory.dart';
 import 'package:ForDev/ui/pages/pages.dart';
