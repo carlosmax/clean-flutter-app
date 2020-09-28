@@ -33,8 +33,9 @@ void main() {
   }
 
   PostExpectation mockAuthenticationCall() => when(authentication.auth(any));
-  
-  PostExpectation mockSaveCurrentAccountCall() => when(saveCurrentAccount.save(any));
+
+  PostExpectation mockSaveCurrentAccountCall() =>
+      when(saveCurrentAccount.save(any));
 
   void mockAuthentication() {
     mockAuthenticationCall().thenAnswer((_) async => Account(token));
@@ -193,6 +194,16 @@ void main() {
     expectLater(sut.isLoadingStream, emitsInOrder([true, false]));
     sut.mainErrorStream.listen(expectAsync1(
         (error) => expect(error, DomainError.unexpected.description)));
+
+    await sut.auth();
+  });
+
+  test('Should change page on success', () async {
+    sut.validateEmail(email);
+    sut.validatePassword(password);
+
+    sut.navigateToStream
+        .listen(expectAsync1((page) => expect(page, '/surveys')));
 
     await sut.auth();
   });

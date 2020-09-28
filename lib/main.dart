@@ -4,7 +4,6 @@ import 'package:get/get.dart';
 
 import 'main/factories/pages/login/login_page_factory.dart';
 import 'ui/components/components.dart';
-import 'ui/pages/pages.dart';
 
 void main() {
   runApp(App());
@@ -22,6 +21,12 @@ class App extends StatelessWidget {
       initialRoute: '/login',
       getPages: [
         GetPage(name: '/login', page: makeLoginPage),
+        GetPage(
+          name: '/surveys',
+          page: () => Scaffold(
+            body: Text('Enquetes'),
+          ),
+        ),
       ],
     );
   }
