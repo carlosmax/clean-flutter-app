@@ -1,30 +1,46 @@
 import 'package:http/http.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
-import 'package:ForDev/data/usecases/authentication/remote_authentication.dart';
-import 'package:ForDev/infra/http/index.dart';
-import 'package:ForDev/main/factories/http/api_url_factory.dart';
-import 'package:ForDev/ui/pages/pages.dart';
-import 'package:ForDev/validation/protocols/protocols.dart';
-import 'package:ForDev/validation/validators/validators.dart';
-import 'package:ForDev/presentation/presenters/presenters.dart';
-import 'package:ForDev/main/builders/builders.dart';
+import '../../http/api_url_factory.dart';
+import '../../../builders/builders.dart';
+import '../../../../domain/usecases/index.dart';
+import '../../../../data/usecases/index.dart';
+import '../../../../infra/index.dart';
+import '../../../../ui/pages/pages.dart';
+import '../../../../validation/protocols/field_validation.dart';
+import '../../../../validation/validators/validators.dart';
+import '../../../../presentation/presenters/presenters.dart';
+import '../../../../presentation/protocols/protocols.dart';
 
 Widget makeLoginPage() {
-  //TODO: separate factories in files
+  final presenter = GetXLoginPresenter(
+    authentication: makeRemoteAuthentication(),
+    validation: makeLoginValidationComposite(),
+    saveCurrentAccount: makeLocalSaveCurrentAccount(),
+  );
+  return LoginPage(presenter);
+}
 
+Authentication makeRemoteAuthentication() {
   final client = Client();
   final httpAdapter = HttpAdapter(client);
-  final remoteAuthentication = RemoteAuthentication(
+
+  return RemoteAuthentication(
     httpClient: httpAdapter,
     url: makeApiUrl('login'),
   );
-  final validationComposite = ValidationComposite(makeLoginValidations());
-  final presenter = GetXLoginPresenter(
-    authentication: remoteAuthentication,
-    validation: validationComposite,
-  );
-  return LoginPage(presenter);
+}
+
+SaveCurrentAccount makeLocalSaveCurrentAccount() {
+  final secureStorage = FlutterSecureStorage();
+  final localStorageAdapter = LocalStorageAdapter(secureStorage: secureStorage);
+
+  return LocalSaveCurrentAccount(saveSecureCacheStorage: localStorageAdapter);
+}
+
+Validation makeLoginValidationComposite() {
+  return ValidationComposite(makeLoginValidations());
 }
 
 List<FieldValidation> makeLoginValidations() {

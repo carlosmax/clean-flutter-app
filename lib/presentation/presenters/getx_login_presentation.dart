@@ -1,14 +1,16 @@
-import 'package:ForDev/ui/pages/login/login_presenter.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get/state_manager.dart';
 
 import '../protocols/protocols.dart';
-import '../../domain/usecases/index.dart';
 import '../../domain/helpers/index.dart';
+import '../../domain/usecases/index.dart';
+import '../../domain/usecases/save_current_account.dart';
+import '../../ui/pages/login/login_presenter.dart';
 
 class GetXLoginPresenter implements LoginPresenter {
   final Validation validation;
   final Authentication authentication;
+  final SaveCurrentAccount saveCurrentAccount;
 
   String _email;
   String _password;
@@ -25,8 +27,11 @@ class GetXLoginPresenter implements LoginPresenter {
   Stream<bool> get isLoadingStream => _isLoading.stream;
   Stream<String> get mainErrorStream => _mainError.stream;
 
-  GetXLoginPresenter(
-      {@required this.validation, @required this.authentication});
+  GetXLoginPresenter({
+    @required this.validation,
+    @required this.authentication,
+    @required this.saveCurrentAccount,
+  });
 
   void dispose() {}
 
@@ -38,7 +43,8 @@ class GetXLoginPresenter implements LoginPresenter {
 
   void validatePassword(String password) {
     _password = password;
-    _passwordError.value = this.validation.validate(field: 'password', value: password);
+    _passwordError.value =
+        this.validation.validate(field: 'password', value: password);
     _validateForm();
   }
 
@@ -51,13 +57,14 @@ class GetXLoginPresenter implements LoginPresenter {
 
   Future<void> auth() async {
     _isLoading.value = true;
-    
+
     try {
-      await authentication.auth(
-          AuthenticationParams(email: _email, secret: _password));
+      final account = await authentication
+          .auth(AuthenticationParams(email: _email, secret: _password));
+      await saveCurrentAccount.save(account);
     } on DomainError catch (error) {
       _mainError.value = error.description;
     }
-    _isLoading.value = false;    
+    _isLoading.value = false;
   }
 }
