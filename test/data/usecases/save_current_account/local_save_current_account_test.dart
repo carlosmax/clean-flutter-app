@@ -5,7 +5,7 @@ import 'package:mockito/mockito.dart';
 import 'package:ForDev/domain/entities/account.dart';
 import 'package:ForDev/domain/helpers/domain_error.dart';
 import 'package:ForDev/data/usecases/index.dart';
-import 'package:ForDev/data/cache/save_secure_cache_storage.dart';
+import 'package:ForDev/data/cache/cache.dart';
 
 class SaveSecureCacheStorageSpy extends Mock implements SaveSecureCacheStorage {
 }
