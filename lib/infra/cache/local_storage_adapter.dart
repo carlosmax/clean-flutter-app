@@ -15,7 +15,6 @@ class LocalStorageAdapter
   }
 
   Future<String> fetchSecure(String key) async {
-    await secureStorage.read(key: key);
-    return null;
+    return await secureStorage.read(key: key);
   }
 }
