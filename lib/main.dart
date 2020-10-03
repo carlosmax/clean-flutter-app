@@ -6,6 +6,7 @@ import 'main/factories/pages/pages.dart';
 import 'ui/components/components.dart';
 
 void main() {
+  //R.load(Locale('en', 'US'));
   runApp(App());
 }
 
